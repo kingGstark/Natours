@@ -13,15 +13,15 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOCKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
   res.status(statusCode).json({
@@ -52,7 +52,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
 exports.logIn = catchAsync(async (req, res, next) => {
   let token = '';
   let { email, password } = req.body;
-  console.log('llego');
   if (!email || !password) {
     return next(new ApiError('fields need it', 404));
   }
@@ -61,19 +60,17 @@ exports.logIn = catchAsync(async (req, res, next) => {
     return next(new ApiError('incorrect email or password', 404));
   }
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
-  console.log(req.cookies);
   if (
     req.headers.authorization ||
     req.headers.authorization?.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
-    console.log('llego');
     token = req.cookies.jwt;
   }
   if (!token) {
@@ -133,18 +130,15 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  console.log('klk');
   let { password, passwordConfirm } = req.body;
   let passwordToken = crypto
     .createHash('sha256')
     .update(req.params.resetToken)
     .digest('hex');
-  console.log(passwordToken);
   let user = await User.findOne({
     passwordResetToken: passwordToken,
     passwordResetExpires: { $gt: Date.now() },
   });
-  console.log(user);
   if (!user) next(new ApiErrors('token expires or user doesnt exist', 404));
   user.password = password;
   user.passwordConfirm = passwordConfirm;
@@ -169,7 +163,6 @@ exports.changePassword = catchAsync(async (req, res, next) => {
       new ApiErrors('you neet to supply your old and new password', 404)
     );
   }
-  console.log(user, oldPassword, newPassword, newPasswordConfirm);
   //check if password is correct
   if (!(await user.checkPassword(oldPassword, user.password))) {
     return next(
@@ -183,7 +176,7 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   await user.validate();
 
   user.save();
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
   //log user, return token
 });
 

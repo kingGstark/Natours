@@ -19,6 +19,7 @@ const bookingRouter = require('./routes/bookingRoutes');
 const cookieparser = require('cookie-parser');
 //(1)Global MIDDLEWARES
 //security https
+app.enable('trust proxy');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(helmet({ contentSecurityPolicy: false }));
