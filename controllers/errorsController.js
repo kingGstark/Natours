@@ -29,6 +29,7 @@ const prodErrors = (err, req, res) => {
     return res.status(500).json({
       status: 'error',
       message: 'server error',
+      err: err,
     });
   }
   //render
@@ -51,7 +52,6 @@ const castErrorDB = (err) => {
 
 const duplicateValue = (err) => {
   const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
-  console.log(value);
   const message = `the field with the value of: ${value}, is duplicated`;
   return new ApiErrors(message, 404);
 };

@@ -19,7 +19,7 @@ export const login = async (email, password) => {
     }
   } catch (err) {
     console.log(err);
-    showAlert('error', err.reponse.data);
+    showAlert('error', 'datos de cuenta incorrectos');
   }
 };
 
