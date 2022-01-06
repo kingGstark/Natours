@@ -8,9 +8,7 @@ export const bookTour = async (tourId) => {
       'pk_test_51IKR1TI6EqHGiI1ossxNbl3JsvYZZFfJMzwjQXG9rxLi0tfnum1oA4lKgHOh5JpyDUuMhdrQXv9l383h285oKxwv00laF0fup3'
     );
 
-    const session = await axios(
-      `http://localhost:3000/api/v1/booking/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/booking/checkout-session/${tourId}`);
 
     //create checkout form + proccess
 

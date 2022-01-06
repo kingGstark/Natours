@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const fs = require('fs');
+const compression = require('compression');
 const globalErrors = require('./controllers/errorsController.js');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -66,6 +67,7 @@ app.use(
     ],
   })
 );
+app.use(compression());
 /////Routes
 app.get('/api/v1/video', (req, res) => {
   const stream = fs.createReadStream('./dev-data/data/test.mkv');
