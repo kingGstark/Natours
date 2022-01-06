@@ -70,7 +70,6 @@ userSchema.methods.checkPassword = async function (incomePass, userPass) {
 userSchema.methods.hasRecentlyChangePass = function (jwtTimeStamp) {
   if (this.passwordChangeDate) {
     const PassTime = parseInt(this.passwordChangeDate.getTime() / 1000, 10);
-    console.log(jwtTimeStamp < PassTime);
     return jwtTimeStamp < PassTime;
   }
 
@@ -79,14 +78,12 @@ userSchema.methods.hasRecentlyChangePass = function (jwtTimeStamp) {
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
-  console.log(resetToken);
   this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
 
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-  console.log(this.passwordResetToken);
   return resetToken;
 };
 const User = mongoose.model('User', userSchema);
