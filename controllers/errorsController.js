@@ -2,6 +2,7 @@ const ApiErrors = require('../utils/ApiErrors');
 
 const devErrors = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
+    console.log(err.satus);
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
@@ -70,11 +71,10 @@ const expiredToken = (error) =>
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-
   if (process.env.NODE_ENV === 'development') {
     devErrors(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = Object.assign(err);
+    let error = Object.assign({}, err);
     if (error.name === 'CastError') error = castErrorDB(error);
     if (error.code === 11000) error = duplicateValue(error);
     if (error.name === 'ValidationError') error = validatorError(error, next);

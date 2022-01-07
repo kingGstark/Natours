@@ -2,25 +2,26 @@ import axios from 'axios';
 import { showAlert } from './alert';
 
 export const login = async (email, password) => {
-  try {
-    const response = await axios({
-      method: 'POST',
-      url: '/api/v1/users/logIn',
-      data: {
-        email,
-        password,
-      },
+  await axios({
+    method: 'POST',
+    url: 'http://localhost:3000/api/v1/users/logIn',
+    data: {
+      email,
+      password,
+    },
+  })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        showAlert('success', 'Logged successfuly');
+        window.setTimeout(() => {
+          location.assign('/');
+        }, 500);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      showAlert('error', error);
     });
-    if (response.data.status === 'success') {
-      showAlert('success', 'Logged successfuly');
-      window.setTimeout(() => {
-        location.assign('/');
-      }, 500);
-    }
-  } catch (err) {
-    console.log(err);
-    showAlert('error', 'datos de cuenta incorrectos');
-  }
 };
 
 export const logout = async () => {
