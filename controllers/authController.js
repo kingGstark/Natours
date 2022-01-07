@@ -76,7 +76,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!token) {
     return next(new ApiError('please login to have access', 401));
   }
-  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECREt);
+  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const freshUser = await User.findById(decode.id);
 
@@ -185,7 +185,7 @@ exports.loggedIn = async (req, res, next) => {
     try {
       const decode = await promisify(jwt.verify)(
         req.cookies.jwt,
-        process.env.JWT_SECREt
+        process.env.JWT_SECRET
       );
       const currentUser = await User.findById(decode.id);
 
