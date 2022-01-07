@@ -58,7 +58,7 @@ const createBookingCheckout = async (session) => {
   const price = session.display_items[0].amount / 100;
   await Booking.create({ tour, user, price });
 };
-exports.webhookCheckout = async (req, res, next) => {
+exports.webhookCheckout = (req, res, next) => {
   const signature = req.headers['stripe-signature'];
   let event;
   try {
@@ -72,7 +72,7 @@ exports.webhookCheckout = async (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    await createBookingCheckout(event.data.object);
+    createBookingCheckout(event.data.object);
     res.status(200).json({
       received: true,
     });
