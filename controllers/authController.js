@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const ApiErrors = require('../utils/ApiErrors');
 const Email = require('../utils/emailSender');
 const signToken = (id) => {
-  return jwt.sign({ id: id }, process.env.JWT_SECREt, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
