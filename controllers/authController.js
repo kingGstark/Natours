@@ -181,20 +181,21 @@ exports.changePassword = catchAsync(async (req, res, next) => {
 });
 
 exports.loggedIn = async (req, res, next) => {
-  let token;
   if (req.cookies.jwt) {
     try {
-      token = req.cookies.jwt;
-      const decode = await promisify(jwt.verify)(token, process.env.JWT_SECREt);
-      const freshUser = await User.findById(decode.id);
+      const decode = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECREt
+      );
+      const currentUser = await User.findById(decode.id);
 
-      if (!freshUser) {
+      if (!currentUser) {
         return next();
       }
-      if (freshUser.hasRecentlyChangePass(decode.iat)) {
+      if (currentUser.hasRecentlyChangePass(decode.iat)) {
         return next();
       }
-      res.locals.user = freshUser;
+      res.locals.user = currentUser;
       return next();
     } catch (err) {
       return next();
