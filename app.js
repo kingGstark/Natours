@@ -18,6 +18,7 @@ const viewRouter = require('.//routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const cookieparser = require('cookie-parser');
 const cors = require('cors');
+const bookingController = require('./controllers/bookingController');
 //(1)Global MIDDLEWARES
 //security https
 app.enable('trust proxy');
@@ -38,6 +39,11 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 //bodyparser
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieparser());
