@@ -6,6 +6,7 @@ const factory = require('./handlerFactory');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Booking = require('../models/bookingModel');
 const User = require('../models/userModel');
+
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   //get current booked tour
 
