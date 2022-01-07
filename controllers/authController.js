@@ -27,7 +27,7 @@ const createSendToken = (user, statusCode, req, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: user,
+    data: { user },
   });
 };
 exports.signUp = catchAsync(async (req, res, next) => {
@@ -50,13 +50,12 @@ exports.signUp = catchAsync(async (req, res, next) => {
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
-  let token = '';
   let { email, password } = req.body;
   if (!email || !password) {
     return next(new ApiError('fields need it', 404));
   }
-  const user = await User.findOne({ email: email }).select('+password');
-  if (!user || !(await user.checkPassword(req.body.password, user.password))) {
+  const user = await User.findOne({ email }).select('+password');
+  if (!user || !(await user.checkPassword(password, user.password))) {
     return next(new ApiError('incorrect email or password', 404));
   }
 

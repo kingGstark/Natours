@@ -4,7 +4,7 @@ import { showAlert } from './alert';
 export const login = async (email, password) => {
   await axios({
     method: 'POST',
-    url: 'http://localhost:3000/api/v1/users/logIn',
+    url: '/api/v1/users/logIn',
     data: {
       email,
       password,
@@ -32,5 +32,7 @@ export const logout = async () => {
     });
 
     if (response.data.status == 'success') location.reload(true);
-  } catch (err) {}
+  } catch (err) {
+    showAlert('error', 'Error logging out! Try again.');
+  }
 };
