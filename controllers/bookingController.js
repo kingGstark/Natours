@@ -58,7 +58,7 @@ const createBookingCheckout = async (session) => {
   const price = session.display_items[0].amount / 100;
   await Booking.create({ tour, user, price });
 };
-exports.webhookCheckout = (req, res, next) => {
+exports.webhookCheckout = async (req, res, next) => {
   const signature = req.headers['stripe-signature'];
   let event;
   try {
