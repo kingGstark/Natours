@@ -31,6 +31,7 @@ const prodErrors = (err, req, res) => {
       status: 'error',
       message: 'server error',
       err: err,
+      stack: err.stack,
     });
   }
   //render
@@ -74,7 +75,8 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     devErrors(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = Object.assign({}, err);
+    let error = Object.assign(err);
+    console.log(error);
     if (error.name === 'CastError') error = castErrorDB(error);
     if (error.code === 11000) error = duplicateValue(error);
     if (error.name === 'ValidationError') error = validatorError(error, next);

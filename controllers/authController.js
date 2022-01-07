@@ -51,6 +51,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.logIn = catchAsync(async (req, res, next) => {
   let { email, password } = req.body;
+  console.log(email, password);
   if (!email || !password) {
     return next(new ApiError('fields need it', 404));
   }
