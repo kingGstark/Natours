@@ -80,6 +80,6 @@ exports.webhookCheckout = (req, res, next) => {
 };
 exports.getAllBooking = factory.getAll(Booking);
 exports.getBooking = factory.getOne(Booking);
-exports.addBooking = factory.createOne(Booking);
+exports.createBooking = factory.createOne(Booking);
 exports.updateBooking = factory.updateOne(Booking);
 exports.deleteBooking = factory.deleteOne(Booking);
