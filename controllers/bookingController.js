@@ -72,7 +72,7 @@ exports.webhookCheckout = async (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    await createBookingCheckout(event.data.object);
+    await createBookingCheckout(event.data);
 
     return res.status(200).json({
       received: true,
